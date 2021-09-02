@@ -1,6 +1,7 @@
 
 import React, { useState, } from 'react';
 import { Link } from 'react-router-dom';
+import { login } from '../services/authentication';
 
 const Login = () => {
 
@@ -8,21 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleClick = () => {
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-
-    const user = users.find(function (user) {
-      return email_Id == user.email_Id;
-    });
-
-    if (user) {
-      if (user.password == password) {
-        console.log('Welcome ' + user.firstName);
-      } else {
-        console.log('password is incorrect');
-      }
-    } else {
-      console.log('emailId is not correct');
-    }
+    login({ email_Id, password });
 
   };
 

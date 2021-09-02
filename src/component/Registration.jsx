@@ -1,5 +1,6 @@
 import React, { useState, } from 'react';
 import { Link } from 'react-router-dom';
+import { registration } from '../services/authentication';
 
 const Registration = () => {
   const [firstName, setFirstName] = useState('');
@@ -7,16 +8,20 @@ const Registration = () => {
   const [password, setPassword] = useState('');
 
   const handleClick = () => {
-    let users = JSON.parse(localStorage.getItem('users')) || [];
-    users.push ({ firstName, email_Id, password });
-    localStorage.setItem('users',JSON.stringify(users));
+    const response = registration({ firstName, email_Id, password });
+    console.log(response);
+    if (response.success) {
+      console.log(response.message);
+    } else {  
+      console.error(response.message);
+    }
   };
 
   return (
     // <table> <tr> <td> Email Address: </td> <td> <input type= "text" > </td> </tr>   </table>
     <form >
       <label> fristName: </label>
-      <input type="text" value={firstName} 
+      <input type="text" value={firstName}
         onChange={event => setFirstName(event.target.value)} /> <br />
 
       <label> email_id: </label>
@@ -32,8 +37,18 @@ const Registration = () => {
       <button type='button' onClick={handleClick}> add user </button>
 
       <Link to='/'> Back to Login </Link>
+
     </form>
   );
 };
 
 export default Registration;
+
+
+
+
+
+
+
+
+
