@@ -13,25 +13,22 @@ export const registration = (user) => {
   return { success: true, message: 'registration successfully' };
 };
 
-
-
 export const login = (user) => {
-  const key= 'users';
-  const users = getData(key) || []; 
-  const match = users.find(function(match) {
-    return match.password == user.password && match.email_Id == user.email_Id;
-  });
+  const key = 'users';
+  const users = getData(key) || [];
 
-  if(match){
-    if(match.password== user.password){
-      console.log(' login is successful');
+  const match = users.find((match) => match.email_Id == user.email_Id);
+
+  if (match) {
+    if (match.password == user.password) {
+      return { success: true, message: 'login is successful', roleName: match.roleName };
     }
     else {
-      console.log('password is incorrect');
+      return { success: false, message: 'password is incorrect' };
     }
-
   }
   else {
-    console.log('email_id is not  incorrct');
-  }  
+    return { success: false, message: 'emailId is incorrect' };
+
+  }
 };

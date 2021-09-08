@@ -6,13 +6,14 @@ const Registration = () => {
   const [firstName, setFirstName] = useState('');
   const [email_Id, setemail_Id] = useState('');
   const [password, setPassword] = useState('');
+  const [roleName, setRoleName] = useState('user');
 
-  const handleClick = () => {
-    const response = registration({ firstName, email_Id, password });
+  const handleClick = (user) => {
+    const response = registration(user);
     console.log(response);
     if (response.success) {
       console.log(response.message);
-    } else {  
+    } else {
       console.error(response.message);
     }
   };
@@ -20,7 +21,14 @@ const Registration = () => {
   return (
     // <table> <tr> <td> Email Address: </td> <td> <input type= "text" > </td> </tr>   </table>
     <form >
-      <label> fristName: </label>
+      <select name="userRoll" id="work" value={roleName} onChange={(event) =>
+        setRoleName(event.target.value)} >
+        <option disabled>select your Roll </option>
+        <option value='user'> User </option>
+        <option value='admin'> Admin </option>
+      </select> <br />
+
+      <label> fristName: </label>   
       <input type="text" value={firstName}
         onChange={event => setFirstName(event.target.value)} /> <br />
 
@@ -34,8 +42,7 @@ const Registration = () => {
       <input type="password" value={password}
         onChange={event => setPassword(event.target.value)} /> <br />
 
-      <button type='button' onClick={handleClick}> add user </button>
-
+      <button type='button' onClick={() => handleClick({ firstName, email_Id, password, roleName })}> add user </button>
       <Link to='/'> Back to Login </Link>
 
     </form>

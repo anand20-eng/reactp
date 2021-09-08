@@ -1,18 +1,29 @@
 
-import React, { useState, } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import { login } from '../services/authentication';
 
 const Login = () => {
-
   const [email_Id, setEmail_Id] = useState('');
   const [password, setPassword] = useState('');
+  const [roleName, setRoleName] = useState('');
 
   const handleClick = () => {
-    login({ email_Id, password });
-
+    const response = login({ email_Id, password });
+    if (response.success) {
+      setRoleName(response.roleName);
+    } else {
+      console.log(response.message);
+    }
   };
 
+  if (roleName === 'user') {
+    return <Redirect to="/user" />;
+  }
+
+  if (roleName === 'admin') {
+    return <Redirect to="/admin" />;
+  }
 
   return (
     <div>
