@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { login } from '../services/authentication';
 
 const Login = () => {
@@ -11,9 +13,10 @@ const Login = () => {
   const handleClick = () => {
     const response = login({ email_Id, password });
     if (response.success) {
+      toast.success(response.message);
       setRoleName(response.roleName);
     } else {
-      console.log(response.message);
+      toast.error(response.message, { position : 'top-center' });
     }
   };
 
@@ -46,6 +49,7 @@ const Login = () => {
 
         <Link to="/Registration"> New User </Link>
       </form>
+      <ToastContainer />
     </div>
   );
 };
