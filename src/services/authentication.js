@@ -7,7 +7,7 @@ export const registration = (user) => {
   if (users.find(record => record.email_Id === user.email_Id)) {
     return { success: false, message: 'emailId already exist' };
   }
-
+  
   users.push(user);
   setData(key, users);
   return { success: true, message: 'registration successfully' };
@@ -18,7 +18,7 @@ export const login = (user) => {
   const users = getData(key) || [];
 
   const match = users.find((match) => match.email_Id == user.email_Id);
-
+  console.log(match);
   if (match) {
     if (match.password == user.password) {
       return { success: true, message: 'login is successful', roleName: match.roleName };
