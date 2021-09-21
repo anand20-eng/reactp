@@ -32,3 +32,12 @@ export const login = (user) => {
 
   }
 };
+
+export const update = (user) => {
+  const key = 'users';
+  const getUsers = getData(key) || [];
+  const updateUserData = getUsers.map((upData, index) =>
+    upData.email_Id === user.email_Id,
+  updateUserData[index] = user); 
+  console.log(updateUserData);  
+};

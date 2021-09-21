@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { getData } from '../services/localStorageService';
-import { registration } from '../services/authentication';
-import { ToastContainer, toast } from 'react-toastify';
+import { update } from '../services/authentication';
+import { ToastContainer } from 'react-toastify';
 const UpdateComponent = ({ match }) => {
   const key = 'users';
   const users = getData(key) || [];
@@ -20,12 +20,8 @@ const UpdateComponent = ({ match }) => {
   }, []);
 
   const updateRecord = (user) => {
-    const response = registration(user);
-    if (response.success) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
+    const response = update(user);
+    console.log(response);
   };
 
   return (
