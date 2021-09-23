@@ -1,31 +1,31 @@
 
-import React, { useState, } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import { login } from '../services/authentication';
 
 const Login = () => {
-
   const [email_Id, setEmail_Id] = useState('');
   const [password, setPassword] = useState('');
+  const [roleName, setRoleName] = useState('');
 
   const handleClick = () => {
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-
-    const user = users.find(function (user) {
-      return email_Id == user.email_Id;
-    });
-
-    if (user) {
-      if (user.password == password) {
-        console.log('Welcome ' + user.firstName);
-      } else {
-        console.log('password is incorrect');
-      }
+    const response = login({ email_Id, password });
+    if (response.success) {
+      toast.success(response.message);
+      setRoleName(response.roleName);
     } else {
-      console.log('emailId is not correct');
+      toast.error(response.message, { position : 'top-center' });
     }
-
   };
 
+  if (roleName === 'user') {
+    return <Redirect to="/user" />;
+  }
+
+  if (roleName === 'admin') {
+    return <Redirect to="/admin" />;
+  }
 
   return (
     <div>
@@ -48,6 +48,7 @@ const Login = () => {
 
         <Link to="/Registration"> New User </Link>
       </form>
+      <ToastContainer />
     </div>
   );
 };
