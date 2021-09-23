@@ -11,7 +11,6 @@ const AddNewUser = () => {
 
   const handleClick = (user) => {
     const response = registration(user);
-    console.log(response);
     if (response.success) {
       toast.success(response.message);
     } else {
@@ -19,7 +18,6 @@ const AddNewUser = () => {
     }
   };
   const reset = () => {
-    console.log('reset');
     setFirstName( '' );
     setEmail_Id('');
     setPassword('');

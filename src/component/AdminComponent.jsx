@@ -1,32 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { getData, setData } from '../services/localStorageService';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
 
 const AdminComponent = () => {
   const key = 'users';
-  const getUsersData = getData(key) || [];
   const [usersData, setUsersData] = useState([]);
   const [gotoAddComponent, setGotoAddComponent] = useState(false);
   const [emailIdForUpdate, setEmailIdForUpdate] = useState('');
 
-  console.log(usersData);
   useEffect(() => {
     showUsers();
   }, []);
-  //console.log(showUsers());
+
+  const getAllUserData = () => getData(key) || [];
 
   const showUsers = () => {
-    setUsersData(getUsersData.filter((user) => user.roleName === 'user'));
+    const allUsers = getAllUserData();
+    setUsersData(allUsers.filter((user) => user.roleName === 'user'));
   };
 
   const deleteRecord = (email_Id) => {
-
-    const deleteUserData = getUsersData.filter(dUser => dUser.email_Id !== email_Id);
-    console.log(deleteUserData);
+    const allUsers = getAllUserData();
+    const deleteUserData = allUsers.filter(dUser => dUser.email_Id !== email_Id);
     setData(key, deleteUserData);
-    showUsers(deleteUserData);
-    //toast.success('Record is deleted');
+    showUsers();
+    toast.success('Record is deleted');
   };
 
   if (gotoAddComponent) {
