@@ -1,55 +1,61 @@
 
-import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import { login } from '../services/authentication';
+import React from 'react';
+//import {  Link } from 'react-router-dom';
+//import { ToastContainer, toast } from 'react-toastify';
+import { Form, FormControl, FormGroup, FormLabel, Row, Col, Button, FormText, Container } from 'react-bootstrap';
+//import { login } from '../services/authentication';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import '../component/main.css';
 
 const Login = () => {
-  const [email_Id, setEmail_Id] = useState('');
-  const [password, setPassword] = useState('');
-  const [roleName, setRoleName] = useState('');
+  const loginSchema = Yup.object().shape({
+    emailId: Yup.string().email('enter proper email').required('Email is required')
+  });
 
-  const handleClick = () => {
-    const response = login({ email_Id, password });
-    if (response.success) {
-      toast.success(response.message);
-      setRoleName(response.roleName);
-    } else {
-      toast.error(response.message, { position : 'top-center' });
-    }
+  const handleOnSubmit = (credentials) => {
+    console.log('emailId --', credentials);
   };
 
-  if (roleName === 'user') {
-    return <Redirect to="/user" />;
-  }
-
-  if (roleName === 'admin') {
-    return <Redirect to="/admin" />;
-  }
-
   return (
-    <div>
-      <form className="container">
-
-        <label> Email_ID: </label>
-
-        <input type='email' value={email_Id}
-          onChange={event => setEmail_Id(event.target.value)} /> <br />
-
-        <label> password</label> :
-        <input
-          type='password'
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-        />
-        <br />
-
-        <button type='Button' onClick={handleClick}> Sign </button>
-
-        <Link to="/Registration"> New User </Link>
-      </form>
-      <ToastContainer />
-    </div>
+    <Formik
+      initialValues={{ emailId: '' }}
+      onSubmit={handleOnSubmit}
+      validationSchema={loginSchema}>
+      {
+        ({
+          handleSubmit,
+          handleChange,
+          handleBlur,
+          values,
+          touched,
+          errors,
+          isValid,
+        }) => (
+          <Container>
+            <Form noValidate onSubmit={handleSubmit}>
+              <Row className="mb-2">
+                <FormGroup as={Col} md="6" controlId="validationFormik01">
+                  <FormLabel>Email</FormLabel>
+                  <FormControl
+                    type="email"
+                    name="emailId"
+                    value={values.emailId}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isValid={touched.emailId && !errors.emailId}
+                    isInvalid={errors.emailId}
+                    autoComplete="false"
+                  />
+                  {errors.emailId && <FormText className="errors">{errors.emailId}</FormText>}
+                </FormGroup>
+              </Row>
+              <Button disabled={!isValid} type='submit'>Sign</Button>
+            </Form>
+          </Container>
+        )
+      }
+    </Formik >
   );
 };
 
