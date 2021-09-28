@@ -10,18 +10,23 @@ import '../component/main.css';
 
 const Login = () => {
   const loginSchema = Yup.object().shape({
-    emailId: Yup.string().email('enter proper email').required('Email is required')
+    emailId: Yup.string().email('enter proper emailId').max(255).required('Email is required'),
+    password:Yup.string().min(6).required('Password is required')
   });
 
   const handleOnSubmit = (credentials) => {
-    console.log('emailId --', credentials);
+    console.log('user --', credentials);
+    
   };
 
   return (
     <Formik
-      initialValues={{ emailId: '' }}
+      initialValues={{ emailId: '',
+        password: '',
+        roleName: 'user' }}
       onSubmit={handleOnSubmit}
-      validationSchema={loginSchema}>
+      validationSchema={loginSchema} 
+    >
       {
         ({
           handleSubmit,
@@ -36,7 +41,7 @@ const Login = () => {
             <Form noValidate onSubmit={handleSubmit}>
               <Row className="mb-2">
                 <FormGroup as={Col} md="6" controlId="validationFormik01">
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Email *</FormLabel>
                   <FormControl
                     type="email"
                     name="emailId"
@@ -48,6 +53,21 @@ const Login = () => {
                     autoComplete="false"
                   />
                   {errors.emailId && <FormText className="errors">{errors.emailId}</FormText>}
+                </FormGroup>
+              </Row>
+              <Row className="mb-2">
+                <FormGroup as={Col} md="6" controlId="validationFormik01">
+                  <FormLabel>Password *</FormLabel>
+                  <FormControl
+                    type="password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isValid={touched.password && !errors.password}
+                    isInvalid={errors.password}
+                  />
+                  {errors.password && <FormText className="errors">{errors.password}</FormText>}   
                 </FormGroup>
               </Row>
               <Button disabled={!isValid} type='submit'>Sign</Button>
