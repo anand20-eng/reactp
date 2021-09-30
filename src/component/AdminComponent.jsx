@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getData, setData } from '../services/localStorageService';
 import { ToastContainer, toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
+import { Button, Table } from 'react-bootstrap';
 
 const AdminComponent = () => {
   const key = 'users';
@@ -45,10 +46,10 @@ const AdminComponent = () => {
     <>
       <div className="container">
         <h1>Simple Inventory Table  </h1>
-        <p algin='left'><button onClick={()=> setBackToLogin(true)}> 
-        BackLogin</button > </p>
-        <button onClick={() => setGotoAddComponent(true)}> Add </button>
-        <table>
+        <p algin='left'><Button onClick={()=> setBackToLogin(true)}> 
+        BackLogin</Button > </p>
+        <Button onClick={() => setGotoAddComponent(true)}> Add </Button>
+        <Table striped bordered hover variant='Danger' size = 'sm'>
           <thead>
             <tr>
               <th>FirstName</th>
@@ -61,12 +62,12 @@ const AdminComponent = () => {
               (<tr key={index}>
                 <td>{user.firstName}</td>
                 <td>{user.email_Id}</td>
-                <td><button onClick={() => deleteRecord(user.email_Id)}> Delete </button>
-                  <button onClick={() => setEmailIdForUpdate(user.email_Id)}> update </button>  </td>
+                <td><Button variant='success' size='sm' onClick={() => deleteRecord(user.email_Id)}> Delete </Button>
+                  <Button variant='success' size='sm'onClick={() => setEmailIdForUpdate(user.email_Id)}> update </Button>  </td>
               </tr>)
             )}
           </tbody>
-        </table>
+        </Table>
         <ToastContainer />
       </div>
     </>
