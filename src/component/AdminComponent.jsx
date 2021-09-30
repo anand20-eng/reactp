@@ -7,6 +7,7 @@ const AdminComponent = () => {
   const key = 'users';
   const [usersData, setUsersData] = useState([]);
   const [gotoAddComponent, setGotoAddComponent] = useState(false);
+  const [backToLogin,setBackToLogin] = useState(false);
   const [emailIdForUpdate, setEmailIdForUpdate] = useState('');
 
   useEffect(() => {
@@ -36,10 +37,16 @@ const AdminComponent = () => {
     return <Redirect to={{ pathname: `/update/${emailIdForUpdate}` }}
     />;
   }
+  if (backToLogin) {
+    return <Redirect to='/'  />; 
+    
+  }
   return (
     <>
       <div className="container">
-        <h1>Simple Inventory Table</h1>
+        <h1>Simple Inventory Table  </h1>
+        <p algin='left'><button onClick={()=> setBackToLogin(true)}> 
+        BackLogin</button > </p>
         <button onClick={() => setGotoAddComponent(true)}> Add </button>
         <table>
           <thead>
