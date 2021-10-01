@@ -8,7 +8,6 @@ const AdminComponent = () => {
   const key = 'users';
   const [usersData, setUsersData] = useState([]);
   const [gotoAddComponent, setGotoAddComponent] = useState(false);
-  const [backToLogin,setBackToLogin] = useState(false);
   const [emailIdForUpdate, setEmailIdForUpdate] = useState('');
 
   useEffect(() => {
@@ -22,9 +21,9 @@ const AdminComponent = () => {
     setUsersData(allUsers.filter((user) => user.roleName === 'user'));
   };
 
-  const deleteRecord = (email_Id) => {
+  const deleteRecord = (emailId) => {
     const allUsers = getAllUserData();
-    const deleteUserData = allUsers.filter(dUser => dUser.email_Id !== email_Id);
+    const deleteUserData = allUsers.filter(dUser => dUser.emailId !== emailId);
     setData(key, deleteUserData);
     showUsers();
     toast.success('Record is deleted');
@@ -38,22 +37,22 @@ const AdminComponent = () => {
     return <Redirect to={{ pathname: `/update/${emailIdForUpdate}` }}
     />;
   }
-  if (backToLogin) {
-    return <Redirect to='/'  />; 
+  // if (backToLogin) {
+  //   return <Redirect to='/'  />; 
     
-  }
+  // }
   return (
     <>
       <div className="container">
         <h1>Simple Inventory Table  </h1>
-        <p algin='left'><Button onClick={()=> setBackToLogin(true)}> 
-        BackLogin</Button > </p>
+        {/* <p algin='left'><Button onClick={()=> setBackToLogin(true)}>  */}
+        {/* BackLogin</Button > </p> */}
         <Button onClick={() => setGotoAddComponent(true)}> Add </Button>
         <Table striped bordered hover variant='Danger' size = 'sm'>
           <thead>
             <tr>
               <th>FirstName</th>
-              <th>Email_ID</th>
+              <th>EmailID</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -61,9 +60,9 @@ const AdminComponent = () => {
             {usersData.map((user, index) =>
               (<tr key={index}>
                 <td>{user.firstName}</td>
-                <td>{user.email_Id}</td>
-                <td><Button variant='success' size='sm' onClick={() => deleteRecord(user.email_Id)}> Delete </Button>
-                  <Button variant='success' size='sm'onClick={() => setEmailIdForUpdate(user.email_Id)}> update </Button>  </td>
+                <td>{user.emailId}</td>
+                <td><Button variant='success' size='sm' onClick={() => deleteRecord(user.emailId)}> Delete </Button>
+                  <Button variant='success' size='sm'onClick={() => setEmailIdForUpdate(user.emailId)}> update </Button>  </td>
               </tr>)
             )}
           </tbody>

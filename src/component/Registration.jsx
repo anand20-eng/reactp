@@ -38,7 +38,7 @@ const Registration = () => {
         }}
 
         onSubmit={handleOnSubmit}
-        validationSchema={registrationSchema}
+        validation  Schema={registrationSchema}
       >
         {
           ({
