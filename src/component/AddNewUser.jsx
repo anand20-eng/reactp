@@ -9,6 +9,7 @@ import { FormControl, FormGroup, FormLabel, Row, Col,
 import * as Yup from 'yup';
 
 const AddNewUser = () => {
+  
   const [goToAdmin, setGoToAdmin] = useState(false);
   const addSchema = Yup.object().shape({
     firstName: Yup.string().max(20).required('firstName is required'),

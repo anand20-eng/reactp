@@ -34,19 +34,15 @@ const AdminComponent = () => {
   }
 
   if (emailIdForUpdate) {
+    console.log(emailIdForUpdate);
     return <Redirect to={{ pathname: `/update/${emailIdForUpdate}` }}
     />;
   }
-  // if (backToLogin) {
-  //   return <Redirect to='/'  />; 
-    
-  // }
+  
   return (
     <>
       <div className="container">
-        <h1>Simple Inventory Table  </h1>
-        {/* <p algin='left'><Button onClick={()=> setBackToLogin(true)}>  */}
-        {/* BackLogin</Button > </p> */}
+       
         <Button onClick={() => setGotoAddComponent(true)}> Add </Button>
         <Table striped bordered hover variant='Danger' size = 'sm'>
           <thead>

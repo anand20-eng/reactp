@@ -35,13 +35,14 @@ export const update = (userData) => {
   const key = 'users';
   const getUsers = getData(key) || [];
 
-  const userRecord = getUsers.find((item) => userData.email_Id === item.email_Id);
+  const userRecord = getUsers.find((item) => userData.emailId === item.emailId);
+  console.log(userRecord);
   if (userRecord.firstName === userData.firstName && userRecord.password === userData.password) {
     return { success: false, message: 'please change firstName or password' };
   }
 
   const updateUserData = getUsers.map((user) =>
-    user.email_Id === userData.email_Id ? userData : user);
+    user.emailId === userData.emailId ? userData : user);
 
   setData(key, updateUserData);
   return { success: true, message: 'user updated' };

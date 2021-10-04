@@ -17,9 +17,9 @@ const App = () => {
         <Route exact path="/" component={Login} />
         <Route path="/Registration" component={Registration} />
         <Route path="/user" component={UserComponent} />
-        <Route path="/admin" component={AdminComponent} />
+        <Route path="/admin/" component={AdminComponent} />
         <Route path= "/AddNewUser" component={AddNewUser} />
-        <Route path= '/update/:email_Id' component= {UpdateComponent} />
+        <Route path= '/update/:emailId' component= {UpdateComponent} />
       </Switch>
         
     </BrowserRouter>
