@@ -1,16 +1,20 @@
 
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
 import { registration } from '../services/authentication';
-// import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
 import { Form, Formik } from 'formik';
-import { FormControl, FormGroup, FormLabel, Row, Col,
-  Container, FormText, Button  } from 'react-bootstrap';
+import {
+  FormControl, FormGroup, FormLabel, Row, Col,
+  Container, FormText, Button
+} from 'react-bootstrap';
 import * as Yup from 'yup';
 
 const AddNewUser = () => {
-  
+  const [formValue, SetFormValue] = useState('');
   const [goToAdmin, setGoToAdmin] = useState(false);
+  console.log(formValue);
+
   const addSchema = Yup.object().shape({
     firstName: Yup.string().max(20).required('firstName is required'),
     emailId: Yup.string().email('enter proper email').required('email Id is required'),
@@ -18,24 +22,21 @@ const AddNewUser = () => {
   });
   const handleOnSubmit = (user) => {
     console.log(user);
+    SetFormValue(user);
     const response = registration(user);
     if (response.success) {
-      console.log(response.message);
+      toast.success(response.message);
     } else {
-      console.log(response.message);
+      toast.error(response.message);
     }
   };
 
 
-  // const reset = () => {
-  //    {
-  //      firstName:'',
-  //      emailId: '',
-  //     password: '',
-  //     ' 
-  //   };
-  // };
-  
+
+  const reset = () => {
+    const user = '';
+    console.log(user);
+  };
 
   if (goToAdmin) {
     return <Redirect to='/admin' />;
@@ -43,16 +44,18 @@ const AddNewUser = () => {
 
   return (
     <>
-      <Formik 
+      <Formik
+
         initialValues={{
           firstName: '',
           emailId: '',
-          password: '',
-          roleName:'user'
+          password: ''
         }}
         onSubmit={handleOnSubmit}
         validationSchema={addSchema}
       >
+
+
         {
           ({
             handleSubmit,
@@ -62,11 +65,11 @@ const AddNewUser = () => {
             touched,
             errors,
             isValid,
-                
+
           }) => (
 
             <Container>
-              <div className="Button" align="right">  
+              <div className="Button" align="right">
                 <Button onClick={() => setGoToAdmin(true)} > back </Button> </div>
               <Form noValidate onSubmit={handleSubmit}>
                 <Row className="mb-2">
@@ -115,8 +118,9 @@ const AddNewUser = () => {
                     {errors.password && <FormText className="errors">{errors.password}</FormText>}
                   </FormGroup>
                 </Row>
-                <Button disabled={!isValid } 
+                <Button disabled={!isValid}
                   type='submit' >AddUser</Button>
+                <Button type='button' onClick={reset}> Reset </Button>
               </Form>
 
             </Container>
@@ -124,10 +128,9 @@ const AddNewUser = () => {
         }
       </Formik >
 
+      <ToastContainer />
+      <ToastContainer />
 
-      {/* <Button type= 'Button' onClick={()=> setGoToAdmin(true)} > GoBack </Button> */}
- 
-      
     </>
   );
 

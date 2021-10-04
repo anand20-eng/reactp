@@ -61,6 +61,7 @@ const AdminComponent = () => {
                   <Button variant='success' size='sm'onClick={() => setEmailIdForUpdate(user.emailId)}> update </Button>  </td>
               </tr>)
             )}
+            
           </tbody>
         </Table>
         <ToastContainer />

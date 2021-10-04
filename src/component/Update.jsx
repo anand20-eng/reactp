@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { } from 'react-router';
 import { Form, Formik } from 'formik';
 import { update } from '../services/authentication';
 import { ToastContainer, toast } from 'react-toastify';
-
-
 import {
   FormControl, FormGroup, FormLabel, Row, Col,
   Container, FormText, Button
@@ -20,6 +17,7 @@ const UpdateComponent = ({ match }) => {
   const key = 'users';
   const users = getData(key) || [];
   const [user, setUser] = useState('');
+  console.log(user);
   const updateSchema = Yup.object().shape({
     firstName: Yup.string().max(20).required('firstName is required'),
     emailId: Yup.string().email('enter proper email').required('email Id is required'),
@@ -44,15 +42,15 @@ const UpdateComponent = ({ match }) => {
     }
   };
 
-  function goToAdmin() {
+  const goToAdmin = () => {
     history.push('/admin');
-  }
+  };
 
   return (
     <>
-      <Button onClick={goToAdmin}> GOBack </Button>
-      <Button variant="contained" style={{ float: 'right' }}
-        color="primary" className="float-right" onClick={goToAdmin}></Button>
+      <div className="Button" align="right">
+        <Button onClick={goToAdmin} > back </Button> </div>
+
       {user &&
         <Formik
           initialValues={user}
@@ -101,6 +99,7 @@ const UpdateComponent = ({ match }) => {
                         isValid={touched.emailId && !errors.emailId}
                         isInvalid={errors.emailId}
                         autoComplete="false"
+                        readOnly
 
                       />
                       {errors.emailId && <FormText className="errors">{errors.emailId}</FormText>}
