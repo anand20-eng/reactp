@@ -11,10 +11,7 @@ import {
 import * as Yup from 'yup';
 
 const AddNewUser = () => {
-  const [formValue, SetFormValue] = useState('');
   const [goToAdmin, setGoToAdmin] = useState(false);
-  console.log(formValue);
-
   const addSchema = Yup.object().shape({
     firstName: Yup.string().max(20).required('firstName is required'),
     emailId: Yup.string().email('enter proper email').required('email Id is required'),

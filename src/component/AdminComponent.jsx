@@ -57,7 +57,7 @@ const AdminComponent = () => {
               (<tr key={index}>
                 <td>{user.firstName}</td>
                 <td>{user.emailId}</td>
-                <td><Button variant='success' size='sm' onClick={() => deleteRecord(user.emailId)}> Delete </Button>
+                <td><Button variant='success' size='sm' onClick={() => deleteRecord(user.emailId)}> Delete </Button> {' '}
                   <Button variant='success' size='sm'onClick={() => setEmailIdForUpdate(user.emailId)}> update </Button>  </td>
               </tr>)
             )}
