@@ -18,21 +18,12 @@ const AddNewUser = () => {
     password: Yup.string().min(6).required('Password is required')
   });
   const handleOnSubmit = (user) => {
-    console.log(user);
-    SetFormValue(user);
     const response = registration(user);
     if (response.success) {
       toast.success(response.message);
     } else {
       toast.error(response.message);
     }
-  };
-
-
-
-  const reset = () => {
-    const user = '';
-    console.log(user);
   };
 
   if (goToAdmin) {
@@ -51,7 +42,6 @@ const AddNewUser = () => {
         onSubmit={handleOnSubmit}
         validationSchema={addSchema}
       >
-
 
         {
           ({
@@ -117,7 +107,7 @@ const AddNewUser = () => {
                 </Row>
                 <Button disabled={!isValid}
                   type='submit' >AddUser</Button>
-                <Button type='button' onClick={reset}> Reset </Button>
+                <Button type='reset'> Reset </Button>
               </Form>
 
             </Container>

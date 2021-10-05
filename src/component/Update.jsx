@@ -17,7 +17,6 @@ const UpdateComponent = ({ match }) => {
   const key = 'users';
   const users = getData(key) || [];
   const [user, setUser] = useState('');
-  console.log(user);
   const updateSchema = Yup.object().shape({
     firstName: Yup.string().max(20).required('firstName is required'),
     emailId: Yup.string().email('enter proper email').required('email Id is required'),
@@ -27,14 +26,12 @@ const UpdateComponent = ({ match }) => {
   useEffect(() => {
     // eslint-disable-next-line react/prop-types
     const update = users.find(u => u.emailId == match.params.emailId);
-    console.log(update);
     update.firstName;
     setUser(update);
   }, []);
 
   const handleOnSubmit = (user) => {
     const response = update(user);
-    console.log(response);
     if (response.success) {
       toast.success(response.message);
     } else {
@@ -47,7 +44,7 @@ const UpdateComponent = ({ match }) => {
   };
 
   return (
-    <>
+    <div className=' container-fluid mt-10'>
       <div className="Button" align="right">
         <Button onClick={goToAdmin} > back </Button> </div>
 
@@ -128,7 +125,7 @@ const UpdateComponent = ({ match }) => {
         </Formik>
       }
       <ToastContainer />
-    </>
+    </div>
   );
 };
 

@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { registration } from '../services/authentication';
-import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import './styles.css';
+import { ToastContainer, toast,  } from 'react-toastify';
 import {
   Button, Form, Row, Col, Container, FormGroup, FormControl,
   FormLabel, FormText
@@ -17,7 +20,6 @@ const Registration = () => {
     password: Yup.string().min(6).required('Password is required')
   });
   const handleOnSubmit = (user) => {
-    console.log(user);
     const response = registration(user);
     if(response.success){
       toast.success(response.message);

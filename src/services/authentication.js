@@ -3,7 +3,6 @@ import { getData, setData } from './localStorageService';
 export const registration = (user) => {
   const key = 'users';
   const users = getData(key) || [];
-  console.log(user);
   if (users.find(record => record.emailId === user.emailId)) {
     return { success: false, message: 'emailId already exist' };
   }
@@ -36,7 +35,6 @@ export const update = (userData) => {
   const getUsers = getData(key) || [];
 
   const userRecord = getUsers.find((item) => userData.emailId === item.emailId);
-  console.log(userRecord);
   if (userRecord.firstName === userData.firstName && userRecord.password === userData.password) {
     return { success: false, message: 'please change firstName or password' };
   }

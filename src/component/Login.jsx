@@ -17,10 +17,7 @@ const Login = () => {
   });
 
   const handleOnSubmit = (credentials) => {
-    console.log('user --', credentials);
-
     const response = login(credentials);
-    console.log(response);
     if (response.success) {
       toast.success(response.message);
       setRoleName(response.roleName);
