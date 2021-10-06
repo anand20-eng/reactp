@@ -1,56 +1,101 @@
 
-import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import React,{ useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { Link, Redirect } from 'react-router-dom';
+import { Form, FormControl, FormGroup, FormLabel, Row, Col, Button, FormText, Container } from 'react-bootstrap';
 import { login } from '../services/authentication';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import '../component/main.css';
 
 const Login = () => {
-  const [email_Id, setEmail_Id] = useState('');
-  const [password, setPassword] = useState('');
   const [roleName, setRoleName] = useState('');
 
-  const handleClick = () => {
-    const response = login({ email_Id, password });
+  const loginSchema = Yup.object().shape({
+    emailId: Yup.string().email('enter proper email').required('email Id is required'),
+    password: Yup.string().min(6).required('Password is required')
+  });
+
+  const handleOnSubmit = (credentials) => {
+    const response = login(credentials);
     if (response.success) {
       toast.success(response.message);
       setRoleName(response.roleName);
     } else {
-      toast.error(response.message, { position : 'top-center' });
+      toast.error(response.message);
     }
   };
 
-  if (roleName === 'user') {
+  if(roleName === 'user'){
     return <Redirect to="/user" />;
   }
-
-  if (roleName === 'admin') {
-    return <Redirect to="/admin" />;
+  if(roleName === 'admin'){
+    return  <Redirect to="/admin" />;
   }
-
   return (
-    <div>
-      <form className="container">
+    <>
+      <Formik
+        initialValues={{
+          emailId: '',
+          password: ''
+        }}
 
-        <label> Email_ID: </label>
-
-        <input type='email' value={email_Id}
-          onChange={event => setEmail_Id(event.target.value)} /> <br />
-
-        <label> password</label> :
-        <input
-          type='password'
-          value={password}
-          onChange={event => setPassword(event.target.value)}
-        />
-        <br />
-
-        <button type='Button' onClick={handleClick}> Sign </button>
-
-        <Link to="/Registration"> New User </Link>
-      </form>
+        onSubmit={handleOnSubmit}
+        validationSchema={loginSchema}
+      >
+        {
+          ({
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            values,
+            touched,
+            errors,
+            isValid,
+          }) => (
+            <Container>
+              <Form noValidate onSubmit={handleSubmit}>
+                <Row className="mb-2">
+                  <FormGroup as={Col} md="6" controlId="validationFormik01">
+                    <FormLabel>Email *</FormLabel>
+                    <FormControl
+                      type="email"
+                      name="emailId"
+                      value={values.emailId}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      isValid={touched.emailId && !errors.emailId}
+                      isInvalid={errors.emailId}
+                      autoComplete="false"
+                    />
+                    {errors.emailId && <FormText className="errors">{errors.emailId}</FormText>}
+                  </FormGroup>
+                </Row>
+                <Row className="mb-2">
+                  <FormGroup as={Col} md="6" controlId="validationFormik01">
+                    <FormLabel>Password *</FormLabel>
+                    <FormControl
+                      type="password"
+                      name="password"
+                      value={values.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      isValid={touched.password && !errors.password}
+                      isInvalid={errors.password}
+                    />
+                    {errors.password && <FormText className="errors">{errors.password}</FormText>}
+                  </FormGroup>
+                </Row>
+                <Button disabled={!isValid } type='submit'>Sign</Button>
+                <Link to='/Registration'> SignUp </Link>
+              </Form>
+            </Container>
+          )
+        }
+      </Formik >
       <ToastContainer />
-    </div>
+    </>
   );
 };
-
+  
 export default Login;
