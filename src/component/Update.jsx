@@ -118,7 +118,7 @@ const UpdateComponent = ({ match }) => {
                     </FormGroup>
                   </Row>
                   <Button disabled={!isValid}
-                    type='submit' >AddUser</Button>
+                    type='submit' >updateUser</Button>
                 </Form>
               </Container>
             )}

@@ -37,7 +37,8 @@ const AddNewUser = () => {
         initialValues={{
           firstName: '',
           emailId: '',
-          password: ''
+          password: '',
+          roleName: 'user'
         }}
         onSubmit={handleOnSubmit}
         validationSchema={addSchema}
@@ -115,7 +116,6 @@ const AddNewUser = () => {
         }
       </Formik >
 
-      <ToastContainer />
       <ToastContainer />
 
     </>
