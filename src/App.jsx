@@ -7,7 +7,6 @@ import AddNewUser from './component/AddNewUser';
 import UpdateComponent from './component/Update';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
-//import { registration } from './services/authentication';
 
 const App = () => {
   

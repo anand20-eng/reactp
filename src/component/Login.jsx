@@ -1,12 +1,13 @@
 
-import React,{ useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link, Redirect } from 'react-router-dom';
 import { Form, FormControl, FormGroup, FormLabel, Row, Col, Button, FormText, Container } from 'react-bootstrap';
-import { login } from '../services/authentication';
+import { login, validate } from '../services/authentication';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import '../component/main.css';
+import { getData, setData } from '../services/localStorageService';
 
 const Login = () => {
   const [roleName, setRoleName] = useState('');
@@ -16,22 +17,38 @@ const Login = () => {
     password: Yup.string().min(6).required('Password is required')
   });
 
-  const handleOnSubmit = (credentials) => {
-    const response = login(credentials);
-    if (response.success) {
-      toast.success(response.message);
-      setRoleName(response.roleName);
-    } else {
-      toast.error(response.message);
+  useEffect(async () => {
+    const token = getData('token');
+    if (token) {
+      try {
+        const response = await validate(token);
+        setRoleName(response.data.roleName);
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    }
+
+  }, []);
+
+  const handleOnSubmit = async (credentials) => {
+    try {
+      const response = await login(credentials);
+      setData('token', response.data.token);
+      toast.success('login successfully');
+      setRoleName(response.data.user.roleName);
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
   };
 
-  if(roleName === 'user'){
+  if (roleName === 'admin' && getData('token')) {
+    return <Redirect to="/admin" />;
+  }
+
+  if (roleName === 'user' && getData('token')) {
     return <Redirect to="/user" />;
   }
-  if(roleName === 'admin'){
-    return  <Redirect to="/admin" />;
-  }
+
   return (
     <>
       <Formik
@@ -86,7 +103,7 @@ const Login = () => {
                     {errors.password && <FormText className="errors">{errors.password}</FormText>}
                   </FormGroup>
                 </Row>
-                <Button disabled={!isValid } type='submit'>Sign</Button>
+                <Button disabled={!isValid} type='submit'>Sign</Button>
                 <Link to='/Registration'> SignUp </Link>
               </Form>
             </Container>
@@ -97,5 +114,5 @@ const Login = () => {
     </>
   );
 };
-  
+
 export default Login;

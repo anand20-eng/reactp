@@ -1,4 +1,5 @@
-import { getData, setData } from './localStorageService';
+import axios from 'axios';
+import { getData, setData, remove } from './localStorageService';
 
 export const registration = (user) => {
   const key = 'users';
@@ -11,23 +12,12 @@ export const registration = (user) => {
   return { success: true, message: 'registration successfully' };
 };
 
-export const login = (user) => {
-  const key = 'users';
-  const users = getData(key) || [];
+export const login = (credential) => {
+  return axios.post('http://localhost:4000/users/authenticate', { email: credential.emailId, password: credential.password });
+};
 
-  const match = users.find((match) => match.emailId == user.emailId);
-  if (match) {
-    if (match.password == user.password) {
-      return { success: true, message: 'login is successful', roleName: match.roleName };
-    }
-    else {
-      return { success: false, message: 'password is incorrect' };
-    }
-  }
-  else {
-    return { success: false, message: 'emailId is incorrect' };
-
-  }
+export const validate = (token) => {
+  return axios.get('http://localhost:4000/users/validate', { headers: { token } });
 };
 
 export const update = (userData) => {
@@ -44,4 +34,8 @@ export const update = (userData) => {
 
   setData(key, updateUserData);
   return { success: true, message: 'user updated' };
+};
+
+export const logout = () => {
+  remove('token');
 };

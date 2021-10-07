@@ -3,7 +3,7 @@ import { getData, setData } from '../services/localStorageService';
 import { ToastContainer, toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
 import { Button, Modal, Table } from 'react-bootstrap';
-
+import { logout } from '../services/authentication';
 const AdminComponent = () => {
   const key = 'users';
   const [usersData, setUsersData] = useState([]);
@@ -11,6 +11,8 @@ const AdminComponent = () => {
   const [emailIdForUpdate, setEmailIdForUpdate] = useState('');
   const [deletedEmailId, setDeletedEmailID] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [goToLogin, setGoToLogin] = useState(false);
+
   useEffect(() => {
     showUsers();
   }, []);
@@ -40,10 +42,17 @@ const AdminComponent = () => {
     />;
   }
 
+  if (goToLogin || !getData('token')) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <>
       <div className="container">
-
+        <Button onClick={() => {
+          logout();
+          setGoToLogin(true);
+        }}> logOut </Button>
         <Button onClick={() => setGotoAddComponent(true)}> Add </Button>
         <Table striped bordered hover variant='Danger' size='sm'>
           <thead>
