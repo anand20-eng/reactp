@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { getData, setData } from '../services/localStorageService';
 import { ToastContainer, toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
-import { Button, Modal, Table } from 'react-bootstrap';
-import { logout } from '../services/authentication';
+
 const AdminComponent = () => {
   const key = 'users';
   const [usersData, setUsersData] = useState([]);
   const [gotoAddComponent, setGotoAddComponent] = useState(false);
   const [emailIdForUpdate, setEmailIdForUpdate] = useState('');
-  const [deletedEmailId, setDeletedEmailID] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [goToLogin, setGoToLogin] = useState(false);
 
   useEffect(() => {
     showUsers();
@@ -24,13 +20,12 @@ const AdminComponent = () => {
     setUsersData(allUsers.filter((user) => user.roleName === 'user'));
   };
 
-  const deleteRecord = () => {
+  const deleteRecord = (email_Id) => {
     const allUsers = getAllUserData();
-    const deleteUserData = allUsers.filter(dUser => dUser.emailId !== deletedEmailId);
+    const deleteUserData = allUsers.filter(dUser => dUser.email_Id !== email_Id);
     setData(key, deleteUserData);
     showUsers();
     toast.success('Record is deleted');
-    setShowModal(false);
   };
 
   if (gotoAddComponent) {
@@ -41,64 +36,30 @@ const AdminComponent = () => {
     return <Redirect to={{ pathname: `/update/${emailIdForUpdate}` }}
     />;
   }
-
-  if (goToLogin || !getData('token')) {
-    return <Redirect to="/" />;
-  }
-
   return (
     <>
       <div className="container">
-        <Button onClick={() => {
-          logout();
-          setGoToLogin(true);
-        }}> logOut </Button>
-        <Button onClick={() => setGotoAddComponent(true)}> Add </Button>
-        <Table striped bordered hover variant='Danger' size='sm'>
+        <h1>Simple Inventory Table</h1>
+        <button onClick={() => setGotoAddComponent(true)}> Add </button>
+        <table>
           <thead>
             <tr>
               <th>FirstName</th>
-              <th>EmailID</th>
+              <th>Email_ID</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {usersData.map((user, index) =>
-            (<tr key={index}>
-              <td>{user.firstName}</td>
-              <td>{user.emailId}</td>
-              <td>
-                <Button variant='success' size='sm'
-                  onClick={() => setEmailIdForUpdate(user.emailId)}> update </Button>
-                <Button className='ml-4' size='sm'
-                  variant="danger" onClick={() => {
-                    setDeletedEmailID(user.emailId);
-                    setShowModal(true);
-                  }}>
-                  delete
-                </Button>
-                <Modal show={showModal} onHide={() => setShowModal(false)}
-                  backdrop="static">
-                  <Modal.Header closeButton>
-                    <Modal.Title>Delete Record</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>are you sure delete this Record </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="danger" onClick={() => deleteRecord()}>
-                      yes
-                    </Button>
-                    <Button variant="primary" onClick={() => setShowModal(false)}>
-                      No
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
-
-              </td>
-            </tr>)
+              (<tr key={index}>
+                <td>{user.firstName}</td>
+                <td>{user.email_Id}</td>
+                <td><button onClick={() => deleteRecord(user.email_Id)}> Delete </button>
+                  <button onClick={() => setEmailIdForUpdate(user.email_Id)}> update </button>  </td>
+              </tr>)
             )}
-
           </tbody>
-        </Table>
+        </table>
         <ToastContainer />
       </div>
     </>

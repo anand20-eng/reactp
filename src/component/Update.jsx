@@ -1,132 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Formik } from 'formik';
+/* eslint-disable react/prop-types */
+
+import React, { useState, useEffect } from 'react';
+import { getData } from '../services/localStorageService';
 import { update } from '../services/authentication';
 import { ToastContainer, toast } from 'react-toastify';
-import {
-  FormControl, FormGroup, FormLabel, Row, Col,
-  Container, FormText, Button
-} from 'react-bootstrap';
-import { getData } from '../services/localStorageService';
-import { useHistory } from 'react-router-dom';
-
-import * as Yup from 'yup';
-
-// eslint-disable-next-line react/prop-types
+import { Redirect } from 'react-router-dom';
 const UpdateComponent = ({ match }) => {
-  let history = useHistory();
   const key = 'users';
   const users = getData(key) || [];
-  const [user, setUser] = useState('');
-  const updateSchema = Yup.object().shape({
-    firstName: Yup.string().max(20).required('firstName is required'),
-    emailId: Yup.string().email('enter proper email').required('email Id is required'),
-    password: Yup.string().min(6).required('Password is required')
-  });
-
+  const [firstName, setFirstName] = useState('');
+  const [email_Id, setEmailId] = useState('');
+  const [password, setPassword] = useState('');
+  const [goToAdmin, setGoToAdmin] = useState(false);
   useEffect(() => {
-    // eslint-disable-next-line react/prop-types
-    const update = users.find(u => u.emailId == match.params.emailId);
-    update.firstName;
-    setUser(update);
+    const update = users.find(u => u.email_Id == match.params.email_Id);
+    setFirstName(update.firstName);
+    setEmailId(update.email_Id);
+    setPassword(update.password);
+
   }, []);
 
-  const handleOnSubmit = (user) => {
-    const response = update(user);
+  const updateRecord = (userData) => {
+    const response = update(userData);
     if (response.success) {
       toast.success(response.message);
     } else {
-      toast.error(response.message);
+      toast.warn(response.message);
     }
   };
 
-  const goToAdmin = () => {
-    history.push('/admin');
-  };
+
+  if (goToAdmin) {
+    return <Redirect to='/admin' />;
+  }
 
   return (
-    <div className=' container-fluid mt-10'>
-      <div className="Button" align="right">
-        <Button onClick={goToAdmin} > back </Button> </div>
+    <>
+      <div>
+        <form>
+          <p align='center'> <button onClick={() => setGoToAdmin(true)} > back </button></p>
+          <label> firstName: </label>
 
-      {user &&
-        <Formik
-          initialValues={user}
-          onSubmit={handleOnSubmit}
-          validationSchema={updateSchema}
-        >
-          {
-            ({
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              values,
-              touched,
-              errors,
-              isValid,
+          <input type="text" value={firstName}
+            onChange={e => setFirstName(e.target.value)} /> < br />
 
+          <label> email_Id: </label>
+          <input type="email" value={email_Id}
+            onChange={e => setEmailId(e.target.value)} readOnly /> < br />
 
-            }) => (
-
-              <Container>
-                <Form noValidate onSubmit={handleSubmit}>
-                  <Row className="mb-2">
-                    <FormGroup as={Col} md="6" controlId="validationFormik01">
-                      <FormLabel>FirstName *</FormLabel>
-                      <FormControl
-                        type="tex t"
-                        name="firstName"
-                        value={values.firstName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isValid={touched.firstName && !errors.firstName}
-                        isInvalid={errors.firstName}
-                      />
-                      {errors.firstName && <FormText className="errors">{errors.firstName}</FormText>}
-                    </FormGroup>
-                  </Row>
-                  <Row className="mb-2">
-                    <FormGroup as={Col} md="6" controlId="validationFormik01">
-                      <FormLabel>Email *</FormLabel>
-                      <FormControl
-                        type="email"
-                        name="emailId"
-                        value={values.emailId}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isValid={touched.emailId && !errors.emailId}
-                        isInvalid={errors.emailId}
-                        autoComplete="false"
-                        readOnly
-
-                      />
-                      {errors.emailId && <FormText className="errors">{errors.emailId}</FormText>}
-                    </FormGroup>
-                  </Row>
-                  <Row className="mb-2">
-                    <FormGroup as={Col} md="6" controlId="validationFormik01">
-                      <FormLabel>Password *</FormLabel>
-                      <FormControl
-                        type="password"
-                        name="password"
-                        value={values.password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isValid={touched.password && !errors.password}
-                        isInvalid={errors.password}
-                      />
-                      {errors.password && <FormText className="errors">{errors.password}</FormText>}
-                    </FormGroup>
-                  </Row>
-                  <Button disabled={!isValid}
-                    type='submit' >updateUser</Button>
-                </Form>
-              </Container>
-            )}
-        </Formik>
-      }
-      <ToastContainer />
-    </div>
+          <label htmlFor="">  password  :</label>
+          <input type="password" value={password}
+            onChange={e => setPassword(e.target.value)} /> <br />
+          <button type='button' onClick={() =>
+            updateRecord({ firstName, email_Id, password, roleName: 'user' })}> update</button>
+        </form>
+        <ToastContainer />
+      </div>
+    </>
   );
+
 };
 
 export default UpdateComponent;

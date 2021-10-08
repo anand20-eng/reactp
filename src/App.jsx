@@ -7,6 +7,7 @@ import AddNewUser from './component/AddNewUser';
 import UpdateComponent from './component/Update';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
+//import { registration } from './services/authentication';
 
 const App = () => {
   
@@ -16,9 +17,9 @@ const App = () => {
         <Route exact path="/" component={Login} />
         <Route path="/Registration" component={Registration} />
         <Route path="/user" component={UserComponent} />
-        <Route path="/admin/" component={AdminComponent} />
+        <Route path="/admin" component={AdminComponent} />
         <Route path= "/AddNewUser" component={AddNewUser} />
-        <Route path= '/update/:emailId' component= {UpdateComponent} />
+        <Route path= '/update/:email_Id' component= {UpdateComponent} />
       </Switch>
         
     </BrowserRouter>
