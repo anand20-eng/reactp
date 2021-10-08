@@ -2,14 +2,8 @@ import axios from 'axios';
 import { getData, setData, remove } from './localStorageService';
 
 export const registration = (user) => {
-  const key = 'users';
-  const users = getData(key) || [];
-  if (users.find(record => record.emailId === user.emailId)) {
-    return { success: false, message: 'emailId already exist' };
-  }
-  users.push(user);
-  setData(key, users);
-  return { success: true, message: 'registration successfully' };
+    return axios.post('http://localhost:4000/users/register', {  email: user.email, password: user.password, roleName: user.roleName
+      } );
 };
 
 export const login = (credential) => {

@@ -4,7 +4,7 @@ import { registration } from '../services/authentication';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './styles.css';
-import { ToastContainer, toast,  } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import {
   Button, Form, Row, Col, Container, FormGroup, FormControl,
   FormLabel, FormText
@@ -16,17 +16,18 @@ import '../component/main.css';
 const Registration = () => {
   const registrationSchema = Yup.object().shape({
     firstName: Yup.string().max(20).required('firstName is required'),
-    emailId: Yup.string().email('enter proper email').required('email Id is required'),
+    email: Yup.string().email('enter proper email').required('email Id is required'),
     password: Yup.string().min(6).required('Password is required')
   });
   const handleOnSubmit = (user) => {
-    const response = registration(user);
-    if(response.success){
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
-    
+     registration(user).then((response) => {
+       console.log(response.data.message);
+      toast.success(response.data.message);
+    }).catch((error) => {
+      console.log(error.response.data.message);
+      toast.error(error.response.data.message);
+    });
+
   };
 
   return (
@@ -34,13 +35,13 @@ const Registration = () => {
       <Formik
         initialValues={{
           firstName: '',
-          emailId: '',
+          email: '',
           password: '',
           roleName: 'user'
         }}
 
         onSubmit={handleOnSubmit}
-        validation  Schema={registrationSchema}
+        validation Schema={registrationSchema}
       >
         {
           ({
@@ -59,7 +60,7 @@ const Registration = () => {
                 <Form.Select aria-label="Default select example" name="roleName" id="work"
                   value={values.roleName}
                   onChange={handleChange}
-                
+
                 >
                   <option disabled>select your Roll </option>
                   <option value='user'> User </option>
@@ -85,15 +86,15 @@ const Registration = () => {
                     <FormLabel>Email *</FormLabel>
                     <FormControl
                       type="email"
-                      name="emailId"
-                      value={values.emailId}
+                      name="email"
+                      value={values.email}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      isValid={touched.emailId && !errors.emailId}
-                      isInvalid={errors.emailId}
+                      isValid={touched.email && !errors.email}
+                      isInvalid={errors.email}
                       autoComplete="false"
                     />
-                    {errors.emailId && <FormText className="errors">{errors.emailId}</FormText>}
+                    {errors.email && <FormText className="errors">{errors.email}</FormText>}
                   </FormGroup>
                 </Row>
                 <Row className="mb-2">
