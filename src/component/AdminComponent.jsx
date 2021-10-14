@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getData, } from '../services/localStorageService';
-import { ToastContainer } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
-import { Button, Pagination, Table, Form, Container, Row, Col } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { Button, Pagination, Table, Form, Container, Row, Col, } from 'react-bootstrap';
 import { logout, getEmployeesData } from '../services/authentication';
 
 const PAGINATION_LIMIT = 10;
+// const PAGINATION_LIMIT2 = 20;
 const pageLimits = [5, 10, 15, 20, 50];
 
 const AdminComponent = () => {
-  // const key = 'users';
   const [usersData, setUsersData] = useState([]);
   // const [gotoAddComponent, setGotoAddComponent] = useState(false);
   // const [emailIdForUpdate, setEmailIdForUpdate] = useState('');
@@ -18,34 +18,48 @@ const AdminComponent = () => {
   const [goToLogin, setGoToLogin] = useState(false);
   const [total, setTotal] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
+  const [lastPage, setLastPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [pages, setPages] = useState([]);
+
+  useEffect(() => {
+    configurePagination(currentPage, perPage);
+  }, [total]);
 
   useEffect(() => {
     getEmp(perPage, currentPage);
-    console.log('called', total, perPage);
-  }, [currentPage]);
+  }, [currentPage, perPage]);
 
   const getEmp = (perPage, currentPage) => {
     getEmployeesData(perPage, currentPage).then(response => {
       setTotal(response.data.total);
       setUsersData(response.data.data);
     }).catch(error => {
-      console.log(error.response);
+      toast.error(error.message);
     });
   };
 
-  const setPagination = () => {
+  const configurePagination = (pageNumber, latestPerPage) => {
     let items = [];
-    for (let page = 1; page <= PAGINATION_LIMIT; page++) {
-      items.push(
-        <Pagination.Item key={page} onClick={() => setCurrentPage(page)}
-          active={currentPage === page}>
-          {page}
-        </Pagination.Item>
-      );
+
+    const maxPageNumber = Math.ceil(total / latestPerPage);
+
+    const result = Math.floor((pageNumber - 1) / PAGINATION_LIMIT);
+
+    const start = (result * PAGINATION_LIMIT) + 1;
+    let end = start + (PAGINATION_LIMIT - 1);
+
+    if (end > maxPageNumber) {
+      end = maxPageNumber;
     }
-    return items;
+    for (let page = start; page <= end; page++) {
+      items.push(page);
+    }
+    setCurrentPage(pageNumber);
+    setPages(items);
+    setLastPage(maxPageNumber);
   };
+
 
   if (goToLogin || !getData('token')) {
     return <Redirect to="/" />;
@@ -88,13 +102,16 @@ const AdminComponent = () => {
 
             </tbody>
           </Table>
-          <ToastContainer />
         </Row>
         <Row>
           <Col xs="2">
             <Form.Select aria-label="Default select example"
               id="work"
-              onChange={(e) => setPerPage(e.target.value)}
+              onChange={(e) => {
+                setPerPage(e.target.value);
+                configurePagination(1, e.target.value);
+              }}
+              value={perPage}
             >
               <option disabled>select page limit </option>
               {pageLimits.map((pageLimit) => (
@@ -104,15 +121,19 @@ const AdminComponent = () => {
           </Col>
           <Col>
             <Pagination>
-              <Pagination.First onClick={() => setCurrentPage(1)} />
-              <Pagination.Prev onClick={() => setCurrentPage(currentPage - 1)} />
+              <Pagination.First onClick={() => configurePagination(1, perPage)} disabled={currentPage === 1} />
+              <Pagination.Prev onClick={() => configurePagination(currentPage - 1, perPage)} disabled={currentPage === 1} />
 
-              <Pagination.Ellipsis />
-              <Pagination> {setPagination()}</Pagination>
+              <Pagination> {pages.map((page) => (
+                <Pagination.Item key={page} onClick={() => configurePagination(page, perPage)}
+                  active={currentPage === page}>
+                  {page}
+                </Pagination.Item>
+              ))}</Pagination>
 
-              <Pagination.Ellipsis />
-              <Pagination.Next onClick={() => setCurrentPage(currentPage + 1)} />
-              <Pagination.Last onClick={() => setCurrentPage(PAGINATION_LIMIT)} />
+              <Pagination.Next onClick={() =>
+                configurePagination(currentPage + 1, perPage)} disabled={currentPage === lastPage} />
+              <Pagination.Last onClick={() => configurePagination(lastPage, perPage)} disabled={currentPage === lastPage} />
             </Pagination>
           </Col>
         </Row>

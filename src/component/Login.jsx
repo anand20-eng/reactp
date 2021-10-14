@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Link, Redirect } from 'react-router-dom';
 import { Form, FormControl, FormGroup, FormLabel, Row, Col, Button, FormText, Container } from 'react-bootstrap';
 import { login, validate } from '../services/authentication';
@@ -110,7 +110,6 @@ const Login = () => {
           )
         }
       </Formik >
-      <ToastContainer />
     </>
   );
 };

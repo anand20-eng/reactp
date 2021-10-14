@@ -4,7 +4,7 @@ import { registration } from '../services/authentication';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './styles.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {
   Button, Form, Row, Col, Container, FormGroup, FormControl,
   FormLabel, FormText
@@ -20,11 +20,9 @@ const Registration = () => {
     password: Yup.string().min(6).required('Password is required')
   });
   const handleOnSubmit = (user) => {
-     registration(user).then((response) => {
-       console.log(response.data.message);
+    registration(user).then((response) => {
       toast.success(response.data.message);
     }).catch((error) => {
-      console.log(error.response.data.message);
       toast.error(error.response.data.message);
     });
 
@@ -121,11 +119,6 @@ const Registration = () => {
           )
         }
       </Formik >
-
-      <ToastContainer />
-
-
-
     </>
   );
 };
