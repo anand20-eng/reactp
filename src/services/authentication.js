@@ -2,8 +2,9 @@ import axios from 'axios';
 import { getData, setData, remove } from './localStorageService';
 
 export const registration = (user) => {
-    return axios.post('http://localhost:4000/users/register', {  email: user.email, password: user.password, roleName: user.roleName
-      } );
+  return axios.post('http://localhost:4000/users/register', {
+    email: user.email, password: user.password, roleName: user.roleName
+  });
 };
 
 export const login = (credential) => {
@@ -12,6 +13,10 @@ export const login = (credential) => {
 
 export const validate = (token) => {
   return axios.get('http://localhost:4000/users/validate', { headers: { token } });
+};
+
+export const getEmployeesData = (perPage, currentPage) => {
+  return axios.get(`http://localhost:4000/employees?perPage=${perPage}&currentPage=${currentPage}`);
 };
 
 export const update = (userData) => {
