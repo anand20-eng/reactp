@@ -1,42 +1,44 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { Form, Formik } from 'formik';
-import { update } from '../services/authentication';
 import { ToastContainer, toast } from 'react-toastify';
+import { getId, updateEmployeeData } from '../services/authentication';
 import {
   FormControl, FormGroup, FormLabel, Row, Col,
   Container, FormText, Button
 } from 'react-bootstrap';
-import { getData } from '../services/localStorageService';
 import { useHistory } from 'react-router-dom';
-
 import * as Yup from 'yup';
 
-// eslint-disable-next-line react/prop-types
 const UpdateComponent = ({ match }) => {
-  let history = useHistory();
-  const key = 'users';
-  const users = getData(key) || [];
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState();
+  const history = useHistory();
+
   const updateSchema = Yup.object().shape({
-    firstName: Yup.string().max(20).required('firstName is required'),
-    emailId: Yup.string().email('enter proper email').required('email Id is required'),
-    password: Yup.string().min(6).required('Password is required')
+    id: Yup.number().required('id is required'),
+    employee_name: Yup.string().max(20).required('employee name is required'),
+    employee_age: Yup.number().min(6).required('employee_age is required'),
   });
 
   useEffect(() => {
-    // eslint-disable-next-line react/prop-types
-    const update = users.find(u => u.emailId == match.params.emailId);
-    update.firstName;
-    setUser(update);
+    getEmpData();
   }, []);
 
-  const handleOnSubmit = (user) => {
-    const response = update(user);
-    if (response.success) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
+  const getEmpData = () => {
+    getId(match.params.id).then(response => {
+      setUser(response.data);
+    }).catch(error => {
+      toast.error(error.message);
+    });
+  };
+
+  const updateEmp = (newUser) => {
+    updateEmployeeData(match.params.id, newUser).then(response => {
+      console.log(response);
+      toast.success(response.data.message);
+    }).catch(error => {
+      toast.error(error.message);
+    });
   };
 
   const goToAdmin = () => {
@@ -48,10 +50,10 @@ const UpdateComponent = ({ match }) => {
       <div className="Button" align="right">
         <Button onClick={goToAdmin} > back </Button> </div>
 
-      {user &&
+      {user ?
         <Formik
           initialValues={user}
-          onSubmit={handleOnSubmit}
+          onSubmit={updateEmp}
           validationSchema={updateSchema}
         >
           {
@@ -71,58 +73,73 @@ const UpdateComponent = ({ match }) => {
                 <Form noValidate onSubmit={handleSubmit}>
                   <Row className="mb-2">
                     <FormGroup as={Col} md="6" controlId="validationFormik01">
-                      <FormLabel>FirstName *</FormLabel>
+                      <FormLabel>Employee_Id <FormText className="errors">*</FormText></FormLabel>
                       <FormControl
-                        type="tex t"
-                        name="firstName"
-                        value={values.firstName}
+                        type="number"
+                        name="id"
+                        value={values.id}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isValid={touched.firstName && !errors.firstName}
-                        isInvalid={errors.firstName}
-                      />
-                      {errors.firstName && <FormText className="errors">{errors.firstName}</FormText>}
-                    </FormGroup>
-                  </Row>
-                  <Row className="mb-2">
-                    <FormGroup as={Col} md="6" controlId="validationFormik01">
-                      <FormLabel>Email *</FormLabel>
-                      <FormControl
-                        type="email"
-                        name="emailId"
-                        value={values.emailId}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isValid={touched.emailId && !errors.emailId}
-                        isInvalid={errors.emailId}
-                        autoComplete="false"
+                        isValid={touched.id && !errors.id}
+                        isInvalid={errors.id}
                         readOnly
-
                       />
-                      {errors.emailId && <FormText className="errors">{errors.emailId}</FormText>}
+                      {errors.id && <FormText className="errors">{errors.id}</FormText>}
+                    </FormGroup>
+                  </Row>
+
+
+                  <Row className="mb-2">
+                    <FormGroup as={Col} md="6" controlId="validationFormik01">
+                      <FormLabel>employee_name <FormText className="errors">*</FormText></FormLabel>
+                      <FormControl
+                        type="text"
+                        name="employee_name"
+                        value={values.employee_name}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isValid={touched.employee_name && !errors.employee_name}
+                        isInvalid={errors.employee_name}
+                      />
+                      {errors.employee_name && <FormText className="errors">{errors.employee_name}</FormText>}
                     </FormGroup>
                   </Row>
                   <Row className="mb-2">
                     <FormGroup as={Col} md="6" controlId="validationFormik01">
-                      <FormLabel>Password *</FormLabel>
+                      <FormLabel>employee_age <FormText className="errors">*</FormText></FormLabel>
                       <FormControl
-                        type="password"
-                        name="password"
-                        value={values.password}
+                        type="number"
+                        name="employee_age"
+                        value={values.employee_age}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isValid={touched.password && !errors.password}
-                        isInvalid={errors.password}
+                        isValid={touched.employee_age && !errors.employee_age}
+                        isInvalid={errors.employee_salary}
                       />
-                      {errors.password && <FormText className="errors">{errors.password}</FormText>}
+                      {errors.employee_age && <FormText className="errors">{errors.employee_age}</FormText>}
                     </FormGroup>
                   </Row>
+                  <Row className="mb-2">
+                    <FormGroup as={Col} md="6" controlId="validationFormik01">
+                      <FormLabel>employee_salary</FormLabel>
+                      <FormControl
+                        type="number"
+                        name="employee_salary"
+                        value={values.employee_salary}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isValid={touched.employee_salary && !errors.employee_salary}
+                      />
+                    </FormGroup>
+                  </Row>
+
                   <Button disabled={!isValid}
                     type='submit' >updateUser</Button>
                 </Form>
               </Container>
             )}
-        </Formik>
+        </Formik> :
+        <p>loading...</p>
       }
       <ToastContainer />
     </div>

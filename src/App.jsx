@@ -20,7 +20,7 @@ const App = () => {
           <Route path="/user" component={UserComponent} />
           <Route path="/admin/" component={AdminComponent} />
           <Route path="/AddNewUser" component={AddNewUser} />
-          <Route path='/update/:emailId' component={UpdateComponent} />
+          <Route path='/update/:id' component={UpdateComponent} />
         </Switch>
       </BrowserRouter>
       <ToastContainer />
