@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getData, } from '../services/localStorageService';
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, Pagination, Table, Form, Container, Row, Col, } from 'react-bootstrap';
-import { logout, getEmployeesData, deleteEmployeeData } from '../services/authentication';
+import { Button, Pagination, Table, Form, Container, Row, Col, Modal } from 'react-bootstrap';
+import { logout, getEmployeesData, deleteEmployeeData, } from '../services/authentication';
 
 const PAGINATION_LIMIT = 10;
 // const PAGINATION_LIMIT2 = 20;
@@ -11,16 +11,18 @@ const pageLimits = [5, 10, 15, 20, 50];
 
 const AdminComponent = () => {
   const [usersData, setUsersData] = useState([]);
-  // const [gotoAddComponent, setGotoAddComponent] = useState(false);
+   const [gotoAddComponent, setGotoAddComponent] = useState(false);
   const [idForUpdate, setIdForUpdate] = useState('');
-  //const [showModal, setShowModal] = useState(false);
   const [goToLogin, setGoToLogin] = useState(false);
   const [total, setTotal] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [pages, setPages] = useState([]);
-
+  const [modalShow, setModalShow] = useState('');
+  const [deleteEmpId, setDeleteEmpId] = useState('');
+  console.log(deleteEmpId);
+  console.log(total);
   useEffect(() => {
     configurePagination(currentPage, perPage);
   }, [total]);
@@ -56,15 +58,13 @@ const AdminComponent = () => {
     setLastPage(maxPageNumber);
   };
 
-  const deleteEmpId = (id) => {
-    deleteEmployeeData(id).then(response => {
+  const deleteEmpRecord = (deleteEmpId) => {
+    deleteEmployeeData(deleteEmpId).then(response => {
       console.log(response);
     }).catch(error=>{
       console.log(error.message);
     });
-    const getData = usersData;
-    const empIdDelete = getData.filter(emp => emp.id !== id);
-    setUsersData(empIdDelete);
+
   };
   if (goToLogin || !getData('token')) {
     return <Redirect to="/" />;
@@ -72,6 +72,9 @@ const AdminComponent = () => {
 
   if (idForUpdate) {
     return <Redirect to={{ pathname: `/update/${idForUpdate}` }} />;
+  }
+  if(gotoAddComponent){
+    return <Redirect to= '/AddNewUser' />;
   }
   return (
     <>
@@ -83,7 +86,7 @@ const AdminComponent = () => {
               setGoToLogin(true);
             }}> logOut </Button>
           </Col>
-          {/* <Button onClick={() => setGotoAddComponent(true)}> Add </Button> */}
+          <Button onClick={() => setGotoAddComponent(true)}> Add </Button>
         </Row>
         <Row>
           <Table bordered hover variant='Danger' size='sm' className="mt-2">
@@ -103,16 +106,24 @@ const AdminComponent = () => {
                 <td>{user.employee_name}</td>
                 <td>{user.employee_age} </td>
                 <td>{user.employee_salary} </td>
-                <td><Button variant='danger' size='sm'
-                  onClick={() => deleteEmpId(user.id)}> Delete </Button>
+                <td><Button type='button' variant='danger' size='sm'
+                  onClick={()=> {
+                    setDeleteEmpId(user.id);
+                    setModalShow(true);
+                  }}> Delete </Button>
                   <Button variant='success' size='sm'
-                    onClick={() => setIdForUpdate(user.id)}> update </Button>  </td>
+                    onClick={() => {
+                       setIdForUpdate(user.id);
+                       }}> update </Button> 
+                 </td>
               </tr>)
               )}
 
             </tbody>
           </Table>
         </Row>
+
+
         <Row>
           <Col xs="2">
             <Form.Select aria-label="Default select example"
@@ -146,13 +157,35 @@ const AdminComponent = () => {
               ))}</Pagination>
 
               <Pagination.Next onClick={() =>
-                configurePagination(currentPage + 10, perPage)}
-                disabled={(currentPage == 21 && lastPage == 27)} />
+                configurePagination(currentPage + 1, perPage)}
+                disabled={(currentPage == 21 && lastPage == 26)} />
               <Pagination.Last onClick={() => configurePagination(lastPage, perPage)}
                 disabled={currentPage === lastPage} />
             </Pagination>
           </Col>
         </Row>
+        <Modal show={modalShow}
+          size="sm"
+          backdrop="static"
+          animation={false}
+          onHide={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Modal heading</Modal.Title>
+          </Modal.Header>
+          <Modal.Body> are you sure want delete this record</Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger"
+             onClick={()=> {
+                             deleteEmpRecord(deleteEmpId);
+                              setModalShow(false);                 
+                            }}>
+              Yes
+            </Button>
+            <Button variant="primary" onClick={()=>setModalShow(false)}>
+              No
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     </>
   );
