@@ -7,10 +7,8 @@ export const getEmployeesData = (perPage, currentPage) => {
   };
   export const addEmployee = (employees) => {
       console.log(employees);
-    return axios.post('http://localhost:4000/employees/',
-      { employee_name: employees.employee_name, employee_age: employees.employee_age,
-        employee_salary: employees.employee_salary
-     } );
+    return axios.post('http://localhost:4000/employees/', employees
+      );
   };
   
   export const getEmployeeById = (employeeId) => {
