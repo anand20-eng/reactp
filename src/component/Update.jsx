@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Formik } from 'formik';
 import { ToastContainer, toast } from 'react-toastify';
-import { getId, updateEmployeeData } from '../services/authentication';
+import { getEmployeeById, updateEmployeeData } from '../services/employee';
 import {
   FormControl, FormGroup, FormLabel, Row, Col,
   Container, FormText, Button
@@ -25,7 +25,7 @@ const UpdateComponent = ({ match }) => {
   }, []);
 
   const getEmpData = () => {
-    getId(match.params.id).then(response => {
+    getEmployeeById(match.params.id).then(response => {
       setUser(response.data);
     }).catch(error => {
       toast.error(error.message);

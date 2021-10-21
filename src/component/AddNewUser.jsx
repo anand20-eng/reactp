@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { registration } from '../services/authentication';
+//import { registration } from '../services/authentication';
 import { ToastContainer, toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
 import { Form, Formik } from 'formik';
+import { addEmployee } from '../services/employee';
 import {
   FormControl, FormGroup, FormLabel, Row, Col,
   Container, FormText, Button
@@ -13,18 +14,17 @@ import * as Yup from 'yup';
 const AddNewUser = () => {
   const [goToAdmin, setGoToAdmin] = useState(false);
   const addSchema = Yup.object().shape({
-    id: Yup.number().required('id is required'),
     employee_name: Yup.string().required('employee_name Id is required'),
     employee_age: Yup.string().required('employee_age is required'),
     //employee_salary: Yup.number().required('employee_salary is required')
   });
   const handleOnSubmit = (user) => {
-    const response = registration(user);
-    if (response.success) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
+    addEmployee(user).then(res => {
+      toast.success(res.data.message);
+    }).catch(error =>{
+      toast.error(error.data.message);
+    });
+    console.log(user);
   };
 
   if (goToAdmin) {
@@ -36,7 +36,6 @@ const AddNewUser = () => {
       <Formik
 
         initialValues={{
-          id: '',
           employee_name: '',
           employee_age: '',
           employee_salary: 'user'
@@ -61,21 +60,6 @@ const AddNewUser = () => {
               <div className="Button" align="right">
                 <Button onClick={() => setGoToAdmin(true)} > back </Button> </div>
               <Form noValidate onSubmit={handleSubmit}>
-                <Row className="mb-2">
-                  <FormGroup as={Col} md="6" controlId="validationFormik01">
-                    <FormLabel>id *</FormLabel>
-                    <FormControl
-                      type="number"
-                      name="id"
-                      value={values.id}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      isValid={touched.id && !errors.id}
-                      isInvalid={errors.id}
-                    />
-                    {errors.id && <FormText className="errors">{errors.id}</FormText>}
-                  </FormGroup>
-                </Row>
                 <Row className="mb-2">
                   <FormGroup as={Col} md="6" controlId="validationFormik01">
                     <FormLabel>employee_name *</FormLabel>
