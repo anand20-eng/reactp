@@ -1,6 +1,4 @@
-
 import React, { useState } from 'react';
-//import { registration } from '../services/authentication';
 import { ToastContainer, toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
 import { Form, Formik } from 'formik';
