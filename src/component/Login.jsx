@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Link, Redirect } from 'react-router-dom';
 import { Form, FormControl, FormGroup, FormLabel, Row, Col, Button, FormText, Container } from 'react-bootstrap';
 import { login, validate } from '../services/authentication';
@@ -24,7 +23,7 @@ const Login = () => {
         const response = await validate(token);
         setRoleName(response.data.roleName);
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.message);
       }
     }
 
@@ -34,7 +33,6 @@ const Login = () => {
     try {
       const response = await login(credentials);
       setData('token', response.data.token);
-      toast.success('login successfully');
       setRoleName(response.data.user.roleName);
     } catch (error) {
       toast.error(error.response.data.message);
@@ -110,7 +108,6 @@ const Login = () => {
           )
         }
       </Formik >
-      <ToastContainer />
     </>
   );
 };

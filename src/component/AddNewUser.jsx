@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
-import { registration } from '../services/authentication';
 import { ToastContainer, toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
 import { Form, Formik } from 'formik';
+import { addEmployee } from '../services/employee';
 import {
   FormControl, FormGroup, FormLabel, Row, Col,
   Container, FormText, Button
@@ -13,17 +12,15 @@ import * as Yup from 'yup';
 const AddNewUser = () => {
   const [goToAdmin, setGoToAdmin] = useState(false);
   const addSchema = Yup.object().shape({
-    firstName: Yup.string().max(20).required('firstName is required'),
-    emailId: Yup.string().email('enter proper email').required('email Id is required'),
-    password: Yup.string().min(6).required('Password is required')
+    employee_name: Yup.string().required('employee_name Id is required'),
+    employee_age: Yup.string().required('employee_age is required'),
   });
   const handleOnSubmit = (user) => {
-    const response = registration(user);
-    if (response.success) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
+    addEmployee(user).then(res => {
+      toast.success(res.data.message);
+    }).catch(error => {
+      toast.error(error.message);
+    });
   };
 
   if (goToAdmin) {
@@ -35,10 +32,9 @@ const AddNewUser = () => {
       <Formik
 
         initialValues={{
-          firstName: '',
-          emailId: '',
-          password: '',
-          roleName: 'user'
+          employee_name: '',
+          employee_age: '',
+          employee_salary: 'user'
         }}
         onSubmit={handleOnSubmit}
         validationSchema={addSchema}
@@ -62,48 +58,48 @@ const AddNewUser = () => {
               <Form noValidate onSubmit={handleSubmit}>
                 <Row className="mb-2">
                   <FormGroup as={Col} md="6" controlId="validationFormik01">
-                    <FormLabel>FirstName *</FormLabel>
+                    <FormLabel>employee_name *</FormLabel>
                     <FormControl
-                      type="tex t"
-                      name="firstName"
-                      value={values.firstName}
+                      type="text"
+                      name="employee_name"
+                      value={values.employee_name}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      isValid={touched.firstName && !errors.firstName}
-                      isInvalid={errors.firstName}
-                    />
-                    {errors.firstName && <FormText className="errors">{errors.firstName}</FormText>}
-                  </FormGroup>
-                </Row>
-                <Row className="mb-2">
-                  <FormGroup as={Col} md="6" controlId="validationFormik01">
-                    <FormLabel>Email *</FormLabel>
-                    <FormControl
-                      type="email"
-                      name="emailId"
-                      value={values.emailId}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      isValid={touched.emailId && !errors.emailId}
-                      isInvalid={errors.emailId}
+                      isValid={touched.employee_name && !errors.employee_name}
+                      isInvalid={errors.employee_name}
                       autoComplete="false"
                     />
-                    {errors.emailId && <FormText className="errors">{errors.emailId}</FormText>}
+                    {errors.employee_name && <FormText className="errors">{errors.employee_name}</FormText>}
                   </FormGroup>
                 </Row>
                 <Row className="mb-2">
                   <FormGroup as={Col} md="6" controlId="validationFormik01">
-                    <FormLabel>Password *</FormLabel>
+                    <FormLabel>employee_age *</FormLabel>
                     <FormControl
-                      type="password"
-                      name="password"
-                      value={values.password}
+                      type="number"
+                      name="employee_age"
+                      value={values.employee_age}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      isValid={touched.password && !errors.password}
-                      isInvalid={errors.password}
+                      isValid={touched.employee_age && !errors.employee_age}
+                      isInvalid={errors.employee_age}
                     />
-                    {errors.password && <FormText className="errors">{errors.password}</FormText>}
+                    {errors.employee_age && <FormText className="errors">{errors.employee_age}</FormText>}
+                  </FormGroup>
+                </Row>
+                <Row className="mb-2">
+                  <FormGroup as={Col} md="6" controlId="validationFormik01">
+                    <FormLabel>employee_salary</FormLabel>
+                    <FormControl
+                      type="number"
+                      name="employee_salary"
+                      value={values.employee_salary}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      isValid={touched.employee_salary && !errors.employee_salary}
+                      isInvalid={errors.employee_salary}
+                    />
+                    {errors.employee_salary && <FormText className="errors">{errors.employee_salary}</FormText>}
                   </FormGroup>
                 </Row>
                 <Button disabled={!isValid}
