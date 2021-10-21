@@ -34,7 +34,6 @@ const UpdateComponent = ({ match }) => {
 
   const updateEmp = (newUser) => {
     updateEmployeeData(match.params.id, newUser).then(response => {
-      console.log(response);
       toast.success(response.data.message);
     }).catch(error => {
       toast.error(error.message);

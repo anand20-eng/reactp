@@ -24,7 +24,7 @@ const Login = () => {
         const response = await validate(token);
         setRoleName(response.data.roleName);
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.message);
       }
     }
 
@@ -34,7 +34,6 @@ const Login = () => {
     try {
       const response = await login(credentials);
       setData('token', response.data.token);
-      toast.success('login successfully');
       setRoleName(response.data.user.roleName);
     } catch (error) {
       toast.error(error.response.data.message);

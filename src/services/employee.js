@@ -6,7 +6,6 @@ export const getEmployeesData = (perPage, currentPage) => {
     ${perPage}&currentPage=${currentPage}`);
   };
   export const addEmployee = (employees) => {
-      console.log(employees);
     return axios.post('http://localhost:4000/employees/', employees
       );
   };

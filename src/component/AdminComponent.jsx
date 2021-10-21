@@ -59,9 +59,10 @@ const AdminComponent = () => {
 
   const deleteEmpRecord = (deleteEmpId) => {
     deleteEmployeeData(deleteEmpId).then(response => {
-      console.log(response);
+      toast.success(response.data.message);
+      getEmp(perPage, currentPage);
     }).catch(error => {
-      console.log(error.message);
+      toast.error(error.message);
     });
 
   };
@@ -159,7 +160,7 @@ const AdminComponent = () => {
 
               <Pagination.Next onClick={() =>
                 configurePagination(currentPage + 1, perPage)}
-                disabled={(currentPage == 21 && lastPage == 26)} />
+                disabled={(currentPage == lastPage)} />
               <Pagination.Last onClick={() => configurePagination(lastPage, perPage)}
                 disabled={currentPage === lastPage} />
             </Pagination>
@@ -169,11 +170,11 @@ const AdminComponent = () => {
           size="sm"
           backdrop="static"
           animation={false}
-          onHide={()=> setModalShow(false)}>
+          onHide={() => setModalShow(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Modal heading</Modal.Title>
           </Modal.Header>
-          <Modal.Body> are you sure want delete this record</Modal.Body>
+          <Modal.Body> are you sure? you want to  delete this record {deleteEmpId}</Modal.Body>
           <Modal.Footer>
             <Button variant="danger"
               onClick={() => {

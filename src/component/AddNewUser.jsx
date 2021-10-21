@@ -16,15 +16,13 @@ const AddNewUser = () => {
   const addSchema = Yup.object().shape({
     employee_name: Yup.string().required('employee_name Id is required'),
     employee_age: Yup.string().required('employee_age is required'),
-    //employee_salary: Yup.number().required('employee_salary is required')
   });
   const handleOnSubmit = (user) => {
     addEmployee(user).then(res => {
       toast.success(res.data.message);
-    }).catch(error =>{
-      toast.error(error.data.message);
+    }).catch(error => {
+      toast.error(error.message);
     });
-    console.log(user);
   };
 
   if (goToAdmin) {
@@ -93,7 +91,7 @@ const AddNewUser = () => {
                 </Row>
                 <Row className="mb-2">
                   <FormGroup as={Col} md="6" controlId="validationFormik01">
-                    <FormLabel>employee_salary *</FormLabel>
+                    <FormLabel>employee_salary</FormLabel>
                     <FormControl
                       type="number"
                       name="employee_salary"
