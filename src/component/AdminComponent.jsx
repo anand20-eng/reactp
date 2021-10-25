@@ -3,11 +3,10 @@ import { getData, } from '../services/localStorageService';
 import { logout } from '../services/authentication';
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, Pagination, Table, Form, Container, Row, Col, Modal } from 'react-bootstrap';
+import { Button, Pagination, Table, Form, Container, Row, Col, Modal, InputGroup, FormControl, Image } from 'react-bootstrap';
 import { getEmployeesData, deleteEmployeeData, } from '../services/employee';
 
 const PAGINATION_LIMIT = 10;
-// const PAGINATION_LIMIT2 = 20;
 const pageLimits = [5, 10, 15, 20, 50];
 
 const AdminComponent = () => {
@@ -22,16 +21,18 @@ const AdminComponent = () => {
   const [pages, setPages] = useState([]);
   const [modalShow, setModalShow] = useState('');
   const [deleteEmpId, setDeleteEmpId] = useState('');
+  const [search, setSearch] = useState('');
+
   useEffect(() => {
     configurePagination(currentPage, perPage);
   }, [total]);
 
   useEffect(() => {
-    getEmp(perPage, currentPage);
-  }, [currentPage, perPage]);
+    getEmp(perPage, currentPage, search);
+  }, [currentPage, perPage, search]);
 
-  const getEmp = (perPage, currentPage) => {
-    getEmployeesData(perPage, currentPage).then(response => {
+  const getEmp = (perPage, currentPage, searchQuery) => {
+    getEmployeesData(perPage, currentPage, searchQuery).then(response => {
       setTotal(response.data.total);
       setUsersData(response.data.data);
     }).catch(error => {
@@ -89,12 +90,24 @@ const AdminComponent = () => {
           <Col>
             <Button onClick={() => setGotoAddComponent(true)} size='sm' > Add </Button>
           </Col>
+          <Col xs={6}>
+            <InputGroup className="mb-3">
+              <InputGroup.Text id="basic-addon1">@ </InputGroup.Text>
+              <FormControl
+                placeholder="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </InputGroup>
+
+          </Col>
         </Row>
         <Row>
           <Table bordered hover variant='Danger' size='sm'>
             <thead>
               <tr>
                 <th> id </th>
+                <th>icon</th>
                 <th>employee_name</th>
                 <th>employee_ege</th>
                 <th>employee_salary</th>
@@ -102,20 +115,23 @@ const AdminComponent = () => {
               </tr>
             </thead>
             <tbody>
-              {usersData.map((user, index) =>
+              {usersData.map((employee, index) =>
               (<tr key={index}>
-                <td>{user.id}</td>
-                <td>{user.employee_name}</td>
-                <td>{user.employee_age} </td>
-                <td>{user.employee_salary} </td>
+                <td>{employee.id} </td>
+                <td>
+                  {employee.profile_image && <Image src={employee.profile_image} roundedCircle className="employee-profile" />}
+                </td>
+                <td>{employee.employee_name}</td>
+                <td>{employee.employee_age} </td>
+                <td>{employee.employee_salary} </td>
                 <td><Button type='button' variant='danger' size='sm'
                   onClick={() => {
-                    setDeleteEmpId(user.id);
+                    setDeleteEmpId(employee.id);
                     setModalShow(true);
                   }}> Delete </Button>
                   <Button variant='success' size='sm'
                     onClick={() => {
-                      setIdForUpdate(user.id);
+                      setIdForUpdate(employee.id);
                     }}> update </Button>
                 </td>
               </tr>)

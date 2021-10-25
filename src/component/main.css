@@ -1,3 +1,14 @@
 .errors {
     color: red !important;
 }
+
+.employee-profile {
+    height: 120px;
+    width: 120px;
+    cursor: pointer;
+}
+
+table .employee-profile {
+    height: 55px;
+    width: 50px;
+}
