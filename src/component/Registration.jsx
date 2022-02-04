@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { registration } from '../services/authentication';
+// import { registration } from '../services/authentication';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './styles.css';
-import { toast } from 'react-toastify';
 import {
   Button, Form, Row, Col, Container, FormGroup, FormControl,
   FormLabel, FormText
@@ -12,19 +11,25 @@ import {
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import '../component/main.css';
+import { useDispatch } from 'react-redux';
+import { registrationActionThunk } from '../store/actions/authentication';
 
 const Registration = () => {
+  const dispatch = useDispatch();
+  // const  state  = useSelector(state => state.authenticationReducer);
+
   const registrationSchema = Yup.object().shape({
     firstName: Yup.string().max(20).required('firstName is required'),
     email: Yup.string().email('enter proper email').required('email Id is required'),
     password: Yup.string().min(6).required('Password is required')
   });
   const handleOnSubmit = (user) => {
-    registration(user).then((response) => {
-      toast.success(response.data.message);
-    }).catch((error) => {
-      toast.error(error.message);
-    });
+    dispatch(registrationActionThunk(user));
+    // registration(user).then((response) => {
+    //   toast.success(response.data.message);
+    // }).catch((error) => {
+    //   toast.error(error.message);
+    // });
 
   };
 

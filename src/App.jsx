@@ -5,6 +5,7 @@ import UserComponent from './component/UserComponent';
 import AdminComponent from './component/AdminComponent';
 import AddNewUser from './component/AddNewUser';
 import UpdateComponent from './component/Update';
+import Demo from './component/demo';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import './App.css';
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/admin/" component={AdminComponent} />
           <Route path="/AddNewUser" component={AddNewUser} />
           <Route path='/update/:id' component={UpdateComponent} />
+          <Route path='/demo' component={Demo} />
         </Switch>
       </BrowserRouter>
       <ToastContainer />

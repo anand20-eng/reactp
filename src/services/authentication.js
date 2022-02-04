@@ -14,7 +14,6 @@ export const login = (credential) => {
 export const validate = (token) => {
   return axios.get('http://localhost:4000/users/validate', { headers: { token } });
 };
-
 export const update = (userData) => {
   const key = 'users';
   const getUsers = getData(key) || [];

@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Link, Redirect } from 'react-router-dom';
 import { Form, FormControl, FormGroup, FormLabel, Row, Col, Button, FormText, Container } from 'react-bootstrap';
-import { login, validate } from '../services/authentication';
+import { validate } from '../services/authentication';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import '../component/main.css';
-import { getData, setData } from '../services/localStorageService';
+import { getData, } from '../services/localStorageService';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../store/actions/actionLogin';
+
 
 const Login = () => {
-  const [roleName, setRoleName] = useState('');
+  const dispatch = useDispatch();
 
+  const [roleName, setRoleName] = useState('');
   const loginSchema = Yup.object().shape({
     emailId: Yup.string().email('enter proper email').required('email Id is required'),
     password: Yup.string().min(6).required('Password is required')
@@ -30,13 +34,15 @@ const Login = () => {
   }, []);
 
   const handleOnSubmit = async (credentials) => {
-    try {
-      const response = await login(credentials);
-      setData('token', response.data.token);
-      setRoleName(response.data.user.roleName);
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
+    dispatch(loginAction({ email: credentials.emailId, password: credentials.password }));
+    // try {
+    //   const response = await login(credentials);
+    //   console.log('res',response.data.token);
+    //   setData('token', response.data.token);
+    //   setRoleName(response.data.user.roleName);
+    // } catch (error) {
+    //   toast.error(error.response.data.message);
+    // }
   };
 
   if (roleName === 'admin' && getData('token')) {
