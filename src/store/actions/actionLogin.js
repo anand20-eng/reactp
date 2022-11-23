@@ -12,7 +12,7 @@ export const loginAction = (credential) => {
             dispatch(loginSuccess(response.data.token));
         }).catch(error => {
             dispatch(loginFailed(error.response.data.message));
-            toast.error(error.response.data.message);
+            toast.error(error.response);
         });
     };
 };
