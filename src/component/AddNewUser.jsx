@@ -15,6 +15,7 @@ const AddNewUser = () => {
     employee_name: Yup.string().required('employee_name Id is required'),
     employee_age: Yup.string().required('employee_age is required'),
   });
+  
   const handleOnSubmit = (user) => {
     addEmployee(user).then(res => {
       toast.success(res.data.message);
